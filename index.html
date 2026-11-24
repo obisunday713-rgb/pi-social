@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#512080">
+<title>Pi Social — Connect • Share • Discover</title>
+<!-- Pi SDK is included for later Pi Browser integration. Production authentication
+     must be verified by a secure backend; never put a Server API Key in this file. -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+:root{--purple:#512080;--purple2:#7540a5;--gold:#f5b900;--ink:#241b2e;--muted:#82798a;--bg:#f7f4fa;--line:#eee8f3}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(120deg,#351052,#7540a5);color:white;padding:16px max(18px,calc((100% - 760px)/2));position:sticky;top:0;z-index:4;box-shadow:0 3px 16px #24103322}
+.brand{display:flex;align-items:center;gap:11px;font-weight:850;font-size:22px}.brand img{width:38px;height:38px;border-radius:12px}
+.tag{font-size:11px;color:#f8df89;letter-spacing:.11em;font-weight:700}
+.wrap{max-width:760px;margin:auto;padding:18px 14px 90px}
+.welcome{background:linear-gradient(120deg,#fff,#f0e5fb);border:1px solid #e8d9f5;border-radius:18px;padding:18px;margin-bottom:16px}
+h1{font-size:23px;margin:0 0 5px}.sub{color:var(--muted);margin:0}
+.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}
+.btn{border:0;border-radius:12px;background:var(--purple);color:white;padding:11px 15px;font-weight:750;cursor:pointer}.btn.gold{background:var(--gold);color:#39230a}.btn.light{background:#f0e8f7;color:var(--purple)}
+input,textarea{font:inherit;border:1px solid #e3dbe9;border-radius:12px;padding:12px;width:100%;outline-color:var(--purple);background:white}
+textarea{resize:vertical;min-height:80px}.composer,.post,.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:15px;margin:13px 0;box-shadow:0 4px 16px #31134b08}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#7540a5,#f5b900);display:grid;place-items:center;color:white;font-weight:850;flex-shrink:0}
+.muted{color:var(--muted);font-size:13px}.post p{white-space:pre-wrap}.actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+.action{border:0;background:#f8f5fa;color:#5c4a6b;border-radius:20px;padding:7px 11px;cursor:pointer}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5}
+.navinner{width:min(760px,100%);display:flex;justify-content:space-around;padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+.navitem{border:0;background:none;color:#85798e;font-size:11px;display:grid;gap:3px;justify-items:center;cursor:pointer;padding:5px 9px}.navitem b{font-size:20px}.navitem.active{color:var(--purple);font-weight:800}
+.pill{font-size:11px;background:#f2e8fb;color:var(--purple);padding:4px 8px;border-radius:30px;font-weight:700}
+.hidden{display:none!important}.sectiontitle{font-size:18px;margin:8px 0}.person{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+</style></head>
+<body>
+<header><div class="brand"><img src="logo.jpg" alt="Pi Social logo"><div>Pi Social<div class="tag">CONNECT • SHARE • DISCOVER</div></div><span style="margin-left:auto" class="pill">COMMUNITY</span></div></header>
+<main class="wrap">
+<section class="welcome">
+ <div class="row between"><div><h1>Your people. Your community.</h1><p class="sub">Meet Pioneers, share ideas and grow together.</p></div><div class="avatar">π</div></div>
+ <div class="row" style="margin-top:14px"><button class="btn" id="piLogin">Sign in with Pi</button><span class="muted" id="loginStatus">Browsing demo</span></div>
+</section>
+
+<section id="home">
+ <div class="composer">
+  <div class="row"><div class="avatar" id="meAvatar">G</div><strong id="composerName">Guest Pioneer</strong><span class="pill">Community post</span></div>
+  <textarea id="postText" placeholder="What's happening in your Pi community?"></textarea>
+  <div class="row between"><span class="muted">Be kind. Share responsibly.</span><button class="btn gold" id="publish">Publish post</button></div>
+ </div>
+ <div class="row between"><h2 class="sectiontitle">Community feed</h2><span class="muted">Latest updates</span></div>
+ <div id="feed"></div>
+</section>
+
+<section id="discover" class="hidden">
+ <h2 class="sectiontitle">Discover people</h2><input id="searchPeople" placeholder="Search members or interests…">
+ <div id="peopleList" class="panel"></div>
+ <h2 class="sectiontitle">Communities</h2>
+ <div class="panel">
+  <div class="person"><div><strong>Pi Builders</strong><div class="muted">Ideas, projects and development</div></div><button class="btn light join">Join</button></div>
+  <div class="person"><div><strong>Marketplace Talk</strong><div class="muted">Merchants, buyers and local trade</div></div><button class="btn light join">Join</button></div>
+  <div class="person"><div><strong>Learning Circle</strong><div class="muted">Skills, education and opportunities</div></div><button class="btn light join">Join</button></div>
+ </div>
+</section>
+
+<section id="messages" class="hidden">
+ <h2 class="sectiontitle">Messages</h2><div class="panel"><strong>Private messaging — coming next</strong><p class="muted">The first demo includes the messaging space design. Secure accounts, message storage and real-time delivery require a backend service before public launch.</p></div>
+</section>
+
+<section id="profile" class="hidden">
+ <h2 class="sectiontitle">Your profile</h2><div class="panel">
+ <div class="row"><div class="avatar" id="profileAvatar">G</div><div><strong id="profileName">Guest Pioneer</strong><div class="muted">Pi Social member</div></div></div>
+ <label class="muted" for="bio" style="display:block;margin:16px 0 6px">About you</label><textarea id="bio" placeholder="Tell the community a little about yourself"></textarea>
+ <button class="btn" id="saveProfile" style="margin-top:10px">Save profile</button><p class="muted" id="profileStatus"></p>
+ </div>
+ <div class="panel"><strong>Community guidelines</strong><p class="muted">Respect others. Do not share private information. No scams, harassment, impersonation or misleading financial claims. Report harmful content to the platform team.</p></div>
+</section>
+<footer>Pi Social is an independent community concept. Not an official Pi Network product.</footer>
+</main>
+<nav><div class="navinner">
+ <button class="navitem active" data-tab="home"><b>⌂</b>Home</button>
+ <button class="navitem" data-tab="discover"><b>⌕</b>Discover</button>
+ <button class="navitem" data-tab="create"><b>＋</b>Create</button>
+ <button class="navitem" data-tab="messages"><b>▤</b>Messages</button>
+ <button class="navitem" data-tab="profile"><b>◉</b>Profile</button>
+</div></nav>
+<script>
+const starter=[
+ {id:1,name:"Mira Pioneer",initial:"M",time:"Just now",text:"Hello Pioneers! What skills are you learning this week?",likes:12,liked:false},
+ {id:2,name:"Daniel K.",initial:"D",time:"12 min ago",text:"Building useful things starts with connecting with the right people. Happy to be here!",likes:8,liked:false},
+ {id:3,name:"Ada Creates",initial:"A",time:"35 min ago",text:"Sharing ideas, supporting small businesses and learning together. That's the community spirit.",likes:19,liked:false}
+];
+let posts=JSON.parse(localStorage.getItem("pisocial_posts")||"null")||starter;
+let profile=JSON.parse(localStorage.getItem("pisocial_profile")||'{"name":"Guest Pioneer","bio":""}');
+let username=null;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function render(){
+ document.getElementById("feed").innerHTML=posts.map(p=>`<article class="post"><div class="row"><div class="avatar">${esc(p.initial||p.name[0])}</div><div><strong>${esc(p.name)}</strong><div class="muted">${esc(p.time)}</div></div></div><p>${esc(p.text)}</p><div class="actions"><button class="action" data-like="${p.id}">${p.liked?"♥":"♡"} ${p.likes} Like</button><button class="action" data-comment="${p.id}">◯ Comment</button><button class="action" data-share="${p.id}">↗ Share</button></div></article>`).join("");
+}
+render();
+document.getElementById("publish").onclick=()=>{let t=document.getElementById("postText").value.trim();if(!t)return alert("Write something before publishing.");posts.unshift({id:Date.now(),name:profile.name,initial:profile.name[0].toUpperCase(),time:"Just now",text:t,likes:0,liked:false});localStorage.setItem("pisocial_posts",JSON.stringify(posts));document.getElementById("postText").value="";render();};
+document.getElementById("feed").onclick=e=>{let b=e.target.closest("button");if(!b)return;let p=posts.find(x=>x.id==b.dataset.like);if(p){p.liked=!p.liked;p.likes+=p.liked?1:-1;localStorage.setItem("pisocial_posts",JSON.stringify(posts));render();}else if(b.dataset.comment!==undefined)alert("Comments will be enabled with the secure backend.");else if(b.dataset.share!==undefined){let p=posts.find(x=>x.id==b.dataset.share);if(navigator.share)navigator.share({title:"Pi Social",text:p.text});else alert("Copy this post to share: "+p.text);}};
+document.querySelectorAll(".navitem").forEach(b=>b.onclick=()=>{let tab=b.dataset.tab;if(tab==="create"){document.getElementById("postText").focus();tab="home";}document.querySelectorAll("main section[id]").forEach(s=>s.classList.toggle("hidden",s.id!==tab));document.querySelectorAll(".navitem").forEach(x=>x.classList.toggle("active",x.dataset.tab===tab));});
+const people=[["Mira Pioneer","Learning & community"],["Daniel K.","Pi app builder"],["Ada Creates","Small business"],["Samuel N.","Technology & design"],["Grace O.","Education"]];
+function renderPeople(q=""){document.getElementById("peopleList").innerHTML=people.filter(p=>p.join(" ").toLowerCase().includes(q.toLowerCase())).map(p=>`<div class="person"><div class="row"><div class="avatar">${p[0][0]}</div><div><strong>${esc(p[0])}</strong><div class="muted">${esc(p[1])}</div></div></div><button class="btn light follow">Follow</button></div>`).join("")||"<p class='muted'>No members found.</p>";}
+renderPeople();document.getElementById("searchPeople").oninput=e=>renderPeople(e.target.value);
+document.getElementById("peopleList").onclick=e=>{if(e.target.matches(".follow")){e.target.textContent=e.target.textContent==="Follow"?"Following":"Follow";}};
+document.querySelectorAll(".join").forEach(b=>b.onclick=()=>b.textContent=b.textContent==="Join"?"Joined":"Join");
+document.getElementById("saveProfile").onclick=()=>{profile.name=profile.name||"Guest Pioneer";profile.bio=document.getElementById("bio").value;localStorage.setItem("pisocial_profile",JSON.stringify(profile));document.getElementById("profileStatus").textContent="Profile saved on this device.";};
+document.getElementById("bio").value=profile.bio||"";
+function setUser(n){username=n;profile.name=n;document.getElementById("composerName").textContent=n;document.getElementById("profileName").textContent=n;document.getElementById("meAvatar").textContent=n[0].toUpperCase();document.getElementById("profileAvatar").textContent=n[0].toUpperCase();document.getElementById("loginStatus").textContent="Signed in for this session";}
+document.getElementById("piLogin").onclick=async()=>{if(!window.Pi){alert("Pi sign-in is available inside Pi Browser. You can continue exploring the demo.");return;}try{window.Pi.init({version:"2.0",sandbox:true});const auth=await window.Pi.authenticate(["username"],()=>{});setUser(auth.user.username);}catch(e){alert("Pi sign-in did not complete. Try again inside Pi Browser.");}};
+setUser(profile.name);
+</script></body></html>
